@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dockerstatic
+  namespace: static
+  labels:
+    app: dockerstatic
+    service: dockerstatic
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: dockerstatic
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dockerstatic-v1
+  namespace: static
+  labels:
+    app: dockerstatic
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dockerstatic
+  template:
+    metadata:
+      labels:
+        app: dockerstatic
+        version: v1
+    spec:
+      containers:
+      - name: dockerstatic
+        image: registry.gitlab.com/andor-pierdelacabeza/dockerstatic:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80

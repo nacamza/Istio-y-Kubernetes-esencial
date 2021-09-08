@@ -1,0 +1,32 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: dockerstatic-gateway
+  namespace: static
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "static.istio.local"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: dockerstatic
+  namespace: static
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - dockerstatic-gateway
+  http:
+  - route:
+    - destination:
+        host: dockerstatic
+        port:
+          number: 80
